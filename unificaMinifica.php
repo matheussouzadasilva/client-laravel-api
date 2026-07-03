@@ -6,7 +6,7 @@ class unificaMinifica
 {
 	public function js()
 	{
-		$basePathJs     = "/var/www/client-laravel-api/javascript/";
+		$basePathJs     = getcwd()."/js/";
 		$minifiedPathJs = $basePathJs.'scripts.min.js';
 
 		$minifier = new Minify\JS($basePathJs.'util.js');
@@ -17,7 +17,7 @@ class unificaMinifica
 		$minifier->add($basePathJs.'time.js');
 		$minifier->add($basePathJs.'torcedor.js');
 		$result = $minifier->minify($minifiedPathJs);
-		chmod($minifiedPathJs, 0777);
+		//chmod($minifiedPathJs, 0777);
 
 		if (empty($result)) {
 			echo "0 ";
@@ -28,12 +28,12 @@ class unificaMinifica
 
 	public function cssLayoutAdm()
 	{
-		$basePathJs     = "/var/www/client-laravel-api/css/";
+		$basePathJs     = getcwd()."/css/";
 		$minifiedPathCss = $basePathJs.'layoutadm.min.css';
 
 		$minifier = new Minify\CSS($basePathJs.'layoutadm.css');
 		$result = $minifier->minify($minifiedPathCss);
-		chmod($minifiedPathCss, 0777);
+		//chmod($minifiedPathCss, 0777);
 
 		if (empty($result)) {
 			echo "0 ";
@@ -44,12 +44,12 @@ class unificaMinifica
 
 	public function cssLayoutGeral()
 	{
-		$basePathJs     = "/var/www/client-laravel-api/css/";
+		$basePathJs     = getcwd()."/css/";
 		$minifiedPathCss = $basePathJs.'layoutgeral.min.css';
 
 		$minifier = new Minify\CSS($basePathJs.'layoutgeral.css');
 		$result = $minifier->minify($minifiedPathCss);
-		chmod($minifiedPathCss, 0777);
+		//chmod($minifiedPathCss, 0777);
 
 		if (empty($result)) {
 			echo "0 ";
@@ -63,5 +63,4 @@ class unificaMinifica
 $objUnificaMinifica = new unificaMinifica();
 $objUnificaMinifica->cssLayoutAdm();
 $objUnificaMinifica->cssLayoutGeral();
-
-//$objUnificaMinifica->js();
+$objUnificaMinifica->js();

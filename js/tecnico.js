@@ -1,0 +1,351 @@
+class Tecnico
+{   
+    static valida()
+    {
+        var strErro = '';
+
+        var txtDataNascimento = document.getElementById("txtDataNascimento").value;
+        txtDataNascimento = txtDataNascimento.split("/");
+
+        if (document.getElementById("txtNome").value == "") {
+            strErro = strErro + "<br />Você não preencheu o nome.";
+        }
+        
+        if (txtDataNascimento[0] == "Dia") {
+            strErro = strErro + "<br />Você não preencheu o dia.";
+        }
+        
+        if (txtDataNascimento[1] == "Mes") {
+            strErro = strErro + "<br />Você não preencheu o mes.";
+        }
+        
+        if (txtDataNascimento[2] == "Ano") {
+            strErro = strErro + "<br />Você não preencheu o ano.";
+        }
+        
+        if (txtDataNascimento[0] == "31" && (
+            txtDataNascimento[1] == "04" 
+            || txtDataNascimento[1]  == "06" 
+            || txtDataNascimento[1]  == "09" 
+            || txtDataNascimento[1]  == "11")
+        ) {
+            strErro = strErro + "<br />o mês que você escolheu não possui mais de 30 dias.";
+        }
+         
+        if ((txtDataNascimento[0] == "29") && (txtDataNascimento[1] == "02") && (
+        (txtDataNascimento[2]%4 != "0") || (txtDataNascimento[2]%100 != "0") || (txtDataNascimento[2]%400 != "0")
+        )) {
+            strErro = strErro + "<br />Este ano não é bissexto.";
+        }
+        
+        if (txtDataNascimento[0] > 29 && txtDataNascimento[1] == "02") {
+            strErro = strErro + "<br />fevereiro não tem mais que 29 dias.";
+        }
+
+        if(strErro != "") {
+            document.getElementById("mensagem").innerHTML = "<b>"+strErro+"</b>";
+            return false;
+        }
+    }
+
+    static listar()
+    {
+        var jwtoken,codigo,detalhes,alterar,excluir;
+
+        jwtoken = Util.getCookie('token');
+
+        var table = jQuery('#tabela01').dataTable( {
+      
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        dom: "Bfrtip",        
+        ajax : {
+         "url": Util.url_base_api()+'tecnicos',
+         "dataType": 'json',
+         "type": "GET",
+         "beforeSend": function(xhr){
+            xhr.setRequestHeader('Authorization', 'Bearer ' + jwtoken);
+         }
+        },
+        columns: [
+        {
+        "class": "details-control",
+        "orderable": false,
+        "searchable": false,
+        "searchable": false,
+        "data": null, 
+        render: function ( data, type, row ) {
+
+            codigo = data.codigo_tecnico;
+
+            // Combine the first and last names into a single table field
+            detalhes = "<a href=\"../formularios/tecnico.htm?op=2&codigo="
+            + codigo
+            + "\"><i class='fa-solid fa-info'></i></a>";
+
+            alterar = "<span>  </span><a href=\"../formularios/tecnico.htm?op=1&codigo="
+            + codigo
+            + "\"><i class='fa-solid fa-edit'></i></a>";
+
+            excluir = "<span>  </span><a href=\"javascript:Tecnico.confirmar("
+            + codigo
+            + ")\"><i class='fa-solid fa-trash'></i></a>";
+
+            //console.log(row);
+            return detalhes+alterar+excluir;
+        }, 
+        "width": "60px",
+        "defaultContent": "",
+        
+        },
+
+        { "data": "codigo_tecnico" , name: "codigo_tecnico", "width": "60px" },
+        { "data": "nome" },
+
+        ],
+        select: true,
+        'language': {
+        'url': '../../js/Portuguese-Brasil.json'
+        }
+
+        });
+    }
+
+    static detalhe(codigo)
+    {
+        var xhr = Util.createXHR();
+        xhr.open("GET",Util.url_base_api()+"tecnicos/"+codigo,true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onreadystatechange = function() {
+            //Verificar pelo estado "4" de pronto.
+
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    //Pegar dados da resposta json
+                    var data = JSON.parse(xhr.responseText);
+                    document.getElementById("codigo").value = data.codigo_tecnico;
+                    document.getElementById("txtNome").value = data.nome;
+
+                    var data_nascimento = data.data_nascimento.split("-");
+                    data_nascimento = data_nascimento[2]+"/"+data_nascimento[1]+"/"+data_nascimento[0]
+
+                    document.getElementById("txtDataNascimento").value = data_nascimento;
+                } else if (xhr.status == 429) {
+                    document.getElementById("mensagem").innerHTML = "<br /><b>você foi bloqueado por 3 minutos por que voce fez muitas requisições ao sistema, aguarde.</b>";
+                }
+            }
+        }
+
+        var jwtoken = '';
+        jwtoken = Util.getCookie('token');
+
+        xhr.setRequestHeader('Authorization', 'Bearer ' + jwtoken);
+        xhr.send();
+    }
+
+    static formToJSON(form) 
+    {
+        var codigo  = '';
+        var txtNome = '';
+        var dataNascimento  = '';
+
+        if (form.codigo != undefined) {
+            codigo = form.codigo.value;
+        }
+
+        if (form.txtNome != undefined) {
+            txtNome = form.txtNome.value;
+        }
+
+        if (form.txtDataNascimento != undefined) {
+            dataNascimento = form.txtDataNascimento.value;
+            dataNascimento = dataNascimento.split("/");
+            dataNascimento = dataNascimento[2]+'-'+dataNascimento[1]+'-'+dataNascimento[0];
+        }
+
+        return JSON.stringify({
+            "codigo_tecnico": codigo,
+            "nome": txtNome,
+            "data_nascimento": dataNascimento
+        });
+    }
+
+    static callbackCadAltDel(xhr, op)
+    {
+
+        var msg = "";
+
+        if (op === 'cad') {
+            msg = "Técnico cadastrado com sucesso.";
+        } else if (op === 'alt') {
+            msg = "Técnico alterado com sucesso.";
+        }
+
+        //Verificar pelo estado "4" de pronto.
+        if (xhr.readyState == 4) {
+            //Pegar dados da resposta json
+            var json = "";
+
+            if (xhr.status !== 429) {
+                json = JSON.parse(xhr.responseText);
+            }
+
+            if (xhr.status == 200 || xhr.status == 201) {
+                if (op == 'cad') {
+                    document.getElementById("txtNome").value = "";
+                    document.getElementById("txtDataNascimento").value = "";
+                    document.getElementById("mensagem").innerHTML = msg;
+                }
+
+                if (op !== 'exc') {
+                    document.getElementById("mensagem").innerHTML = msg;
+                }
+
+            } else if (xhr.status == 422) {
+                var strErrosValidate = "";
+
+                if (json.validate_error.nome !== undefined) {
+                    strErrosValidate += json.validate_error.nome[0];
+                }
+
+                if (json.validate_error.data_nascimento !== undefined) {
+                    strErrosValidate += json.validate_error.data_nascimento[0];
+                }
+
+                if (strErrosValidate !== '') {
+                    document.getElementById("mensagem").innerHTML = "<br /><b>"+strErrosValidate+"</b>";    
+                } else {
+                    document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
+                }
+            } else if (xhr.status == 500) {
+                if (json.error !== undefined && json.error === 'token_invalid') {
+                    document.getElementById("mensagem").innerHTML = "<br /><b>Token inválido. Faça o login novamente.</b>";
+                } else {
+                    document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
+                }
+            } else if (xhr.status == 401) {
+                if (json.error !== undefined && json.error === 'token_expired') {
+                    document.getElementById("mensagem").innerHTML = "<br /><b>Token expirado. Faça o login novamente.</b>";
+                } else {
+                    document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
+                }
+            } else if (xhr.status == 429) {
+                document.getElementById("mensagem").innerHTML = "<br /><b>você foi bloqueado por 3 minutos por que voce fez muitas requisições ao sistema, aguarde.</b>";
+            } else {
+                document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
+            }
+        }
+    }
+
+    static confirmar(codigo)
+    {
+        var xhr = Util.createXHR();
+        var ok = window.confirm("Você tem certeza que deseja excluir este técnico?");
+
+        if (ok && xhr != undefined) {		
+            var mensagem = "";
+
+            if (codigo == "") {
+                mensagem += "Código invalido";
+            }
+            
+            if(mensagem == "") {
+                xhr.open("DELETE",Util.url_base_api()+"tecnicos/"+codigo, true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onreadystatechange = function() {
+                    Tecnico.callbackCadAltDel(xhr, 'exc');
+                    location.reload();
+                }
+
+                var jwtoken = '';
+                jwtoken = Util.getCookie('token');
+
+                xhr.setRequestHeader('Authorization', 'Bearer ' + jwtoken);
+                xhr.send();
+            } else {
+                alert(mensagem);
+            } 
+       }
+    }
+
+    static cadastrar(form) 
+    {
+        if (Tecnico.valida() == false) {
+            return false;
+        }
+        
+        document.getElementById("mensagem").innerHTML = "<br /><b>Aguarde...</b>";
+        var mensagem = "";
+
+        if (form.txtNome.value == "") {
+            mensagem += "<br /><b>Você não preencheu a técnico.</b>";
+        }
+        
+        var xhr = Util.createXHR();
+
+        if (mensagem == "" && xhr != undefined) {
+            xhr.open("POST",Util.url_base_api()+"tecnicos", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                Tecnico.callbackCadAltDel(xhr, 'cad');
+            }
+
+            var jwtoken = '';
+            jwtoken = Util.getCookie('token');
+
+            xhr.setRequestHeader('Authorization', 'Bearer ' + jwtoken);
+            xhr.send(Tecnico.formToJSON(form));
+        } else {
+            document.getElementById("mensagem").innerHTML = mensagem;
+        } 
+    }
+
+    static atualizar(form) 
+    {
+        document.getElementById("mensagem").innerHTML = "<br /><b>Aguarde...</b>";  
+        
+        var codigo = form.codigo.value;
+        var mensagem = "";
+
+        if (codigo == "") {
+            mensagem += "Código invalido";
+        }
+
+        if (form.txtNome.value == "") {
+            mensagem += "<br /><b>Você não preencheu a técnico</b>";
+        }
+
+        var xhr = Util.createXHR();
+        
+        if(mensagem == "" && xhr != undefined) {
+            xhr.open("PUT",Util.url_base_api()+"tecnicos/"+codigo,true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                Tecnico.callbackCadAltDel(xhr, 'alt');
+            }
+
+            var jwtoken = '';
+            jwtoken = Util.getCookie('token');
+
+            xhr.setRequestHeader('Authorization', 'Bearer ' + jwtoken);
+            xhr.send(Tecnico.formToJSON(form));
+        } else {
+            document.getElementById("mensagem").innerHTML = mensagem;
+        } 
+    }
+
+    static adicionadatepicker() 
+    {
+        jQuery("#txtDataNascimento").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior'
+        });
+    }
+}

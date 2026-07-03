@@ -51,7 +51,7 @@ class TimeTest extends PHPUnit_Framework_TestCase
     
     public function testAlterarTimeValido()
     {
-        $url = 'http://127.0.0.1/sistemaRest/api/v1/controller/time.php?a=4&id=1&tk='.$this->token;
+        $url = 'http://localhost/sistemaRest/api/v1/controller/time.php?a=4&id=1&tk='.$this->token;
 
         $data = array(
              'txtNome'      => "timeco123"
@@ -66,7 +66,7 @@ class TimeTest extends PHPUnit_Framework_TestCase
 
     public function testExcluirTimeInexistente()
     {
-        $url = 'http://127.0.0.1/sistemaRest/api/v1/controller/time.php?a=5&id=999&tk='.$this->token;
+        $url = 'http://localhost/sistemaRest/api/v1/controller/time.php?a=5&id=999&tk='.$this->token;
         $data = array();
         $result = $this->apiHtml($url, $data, "POST");
         $this->assertEquals('Código inválido.', $result["mensagem"]);
@@ -74,7 +74,7 @@ class TimeTest extends PHPUnit_Framework_TestCase
 
     public function testExcluirTimeInvalida()
     {
-        $url = 'http://127.0.0.1/sistemaRest/api/v1/controller/time.php?a=5&id=asds&tk='.$this->token;
+        $url = 'http://localhost/sistemaRest/api/v1/controller/time.php?a=5&id=asds&tk='.$this->token;
         $data = array();
         $result = $this->apiHtml($url, $data, "POST");
         $this->assertEquals('Código inválido.', $result["mensagem"]);
@@ -83,7 +83,7 @@ class TimeTest extends PHPUnit_Framework_TestCase
     /*
     public function testExcluirTime()
     {
-        $url = 'http://127.0.0.1/sistemaRest/api/v1/controller/time.php?a=5&id=1&tk='.$this->token;
+        $url = 'http://localhost/sistemaRest/api/v1/controller/time.php?a=5&id=1&tk='.$this->token;
         $data = array();
         $result = $this->apiJson($url, $data, "POST");
         $this->assertEquals('Time excluido com sucesso.', $result["mensagem"]);

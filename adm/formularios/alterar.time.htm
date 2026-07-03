@@ -7,17 +7,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Cat&aacute;logo de Jogos</title>
         <link rel="stylesheet" type="text/css" href="../../css/layoutadm.min.css" />
-        <link rel="stylesheet" href="../../css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" />
+        <link rel="stylesheet" href="../../css/bootstrap.min.css" />
         
 
-        <script type="text/javascript" src="../../javascript/scripts.min.js"></script>
-        <script src="../../javascript/jquery.min.js"></script>
-        <script src="../../javascript/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"></script>
-        <script src="../../javascript/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"></script>
+        <script type="text/javascript" src="../../js/scripts.min.js"></script>
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/popper.min.js" ></script>
+        <script src="../../js/bootstrap.min.js" ></script>
 
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
                 Util.logado();
+
+                document.getElementById("btnAcaoVoltar").classList.add('btn-secondary');
+                    document.getElementById("btnAcaoVoltar").innerHTML = "Voltar";
+                    document.getElementById("btnAcaoVoltar").setAttribute("onclick", "Util.goBack('../consultas/consulta.nometime.htm')");
                 
                 Util.queryString();
 
@@ -92,10 +96,15 @@
                       <select class="form-control" name="cmbTecnico" id="cmbTecnico" ></select>
                     </div>
 
+                    </br>
+                    
                     <div class="form-group">
                       <input type="hidden" name="codigo" id="codigo" value="" />
-                      <button id="btnAtualizar" name="btnAtualizar" type="button" class="btn btn-default" onclick="Time.atualizar(frmTime)">Alterar</button>
-                      <button id="btnLimpar" name="btnLimpar" type="reset" class="btn btn-default">Limpar</button>
+
+                      <button id="btnAcaoVoltar" name="btnAcaoVoltar" type="button" class="btn "></button>
+
+                      <button id="btnAtualizar" name="btnAtualizar" type="button" class="btn btn-success" onclick="Time.atualizar(frmTime)">Alterar</button>
+                      <button id="btnLimpar" name="btnLimpar" type="reset" class="btn btn-secondary">Limpar</button>
                     </div>
                 </form>
 
