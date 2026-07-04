@@ -7,7 +7,7 @@ class Util
         //return "http://localhost/laravel-api/public/api/v1/";//url usando apache
         //return "http://localhost:8000/api/v2/flamengo/";//url usando octane
         
-        return "http://localhost:8888/api/v1/";//url usando octane
+        return "http://localhost:8888/api/v2/gremio/";//url usando octane
     }
     
     static url_base_front()
