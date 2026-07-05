@@ -408,7 +408,125 @@ class Torcedor
             var form = JSON.stringify({
                 "password_current":  form.txtSenhaAtual.value,
                 "password":  form.txtSenha.value,
-                "password_confirmation":  form.txtConfSenha.value;
+                "password_confirmation":  form.txtConfSenha.value
+            });
+
+            var jwtoken = '';
+            jwtoken = Util.getCookie('token');
+
+            xhr.setRequestHeader('Authorization', 'Bearer ' + jwtoken);
+            xhr.send(form);
+        } else {
+            document.getElementById("mensagem").innerHTML = mensagem;
+        }
+    }
+    
+    
+    static detalheMeusDados()
+    {
+        var xhr = Util.createXHR();
+        xhr.open("GET",Util.url_base_api()+"retornameusdados",true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onreadystatechange = function() {
+            //Verificar pelo estado "4" de pronto.
+
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    //Pegar dados da resposta json
+                    var data = JSON.parse(xhr.responseText);
+                    document.getElementById("txtNome").value = data.name;
+                    document.getElementById("txtEmail").value = data.email;
+                } else if (xhr.status == 429) {
+                    document.getElementById("mensagem").innerHTML = "<br /><b>você foi bloqueado por 3 minutos por que voce fez muitas requisições ao sistema, aguarde.</b>";
+                }
+            }
+        }
+
+        var jwtoken = '';
+        jwtoken = Util.getCookie('token');
+
+        xhr.setRequestHeader('Authorization', 'Bearer ' + jwtoken);
+        xhr.send();
+    }
+    
+    static alterarMeusDados(form)
+    {
+        document.getElementById("mensagem").innerHTML = "<br /><b>Aguarde...</b>";
+        var xhr = Util.createXHR();
+        var mensagem = "";
+
+        alert("ATENÇÃO, ao alterar seu e-mail você tera que confirmar seu novo e-mail clicando no link de alteração de e-mail enviado para seu novo e-mail.");
+        
+        if (form.txtSenhaAtual.value == "") {
+            mensagem += "<br /><b>Você não preencheu sua senha atual</b>";
+        }
+
+        if (form.txtNome.value == "") {
+            mensagem += "<br /><b>Você não preencheu o nome</b>";
+        }
+        
+        if (form.txtEmail.value == "") {
+            mensagem += "<br /><b>Você não preencheu o e-mail</b>";
+        }
+        
+        if(mensagem == "" && xhr != undefined) {
+            xhr.open("PUT",Util.url_base_api()+"altdadoslog",true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                //Verificar pelo estado "4" de pronto.
+
+                if (xhr.readyState == '4') {
+                    //Pegar dados da resposta json
+                    var json = JSON.parse(xhr.responseText);
+
+                    if (xhr.status == '200' || xhr.status == '201') {
+                        document.getElementById("mensagem").innerHTML = "dados alterados com sucesso.";
+                    } else if (xhr.status == '422') {
+                        var strErrosValidate = "";
+
+                        if (json.validate_error.hasOwnProperty('password_current_invalid') == false) {
+                            strErrosValidate += "<br /><b>Senha atual inválida.</b>";
+                        }
+
+                        if (json.validate_error.txtSenhaAtual !== undefined) {
+                            strErrosValidate += json.validate_error.txtSenhaAtual[0];
+                        }
+
+                        if (json.validate_error.txtNome !== undefined) {
+                            strErrosValidate += json.validate_error.txtNome[0];
+                        }
+                        
+                        if (json.validate_error.txtEmail !== undefined) {
+                            strErrosValidate += json.validate_error.txtEmail[0];
+                        }
+
+                        if (strErrosValidate !== '') {
+                            document.getElementById("mensagem").innerHTML = "<br /><b>"+strErrosValidate+"</b>";    
+                        } else {
+                            document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
+                        }
+                    } else if (xhr.status == '500') {
+                        if (json.error !== undefined && json.error === 'token_invalid') {
+                            document.getElementById("mensagem").innerHTML = "<br /><b>Token inválido. Faça o login novamente.</b>";
+                        } else {
+                            document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
+                        }
+                    } else if (xhr.status == '401') {
+                        if (json.error !== undefined && json.error === 'token_expired') {
+                            document.getElementById("mensagem").innerHTML = "<br /><b>Token expirado. Faça o login novamente.</b>";
+                        } else {
+                            document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
+                        }
+                    } else {
+                        document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
+                    }
+                }
+            }
+            
+            var form = JSON.stringify({
+                "password_current":  form.txtSenhaAtual.value,
+                "name":  form.txtNome.value,
+                "email":  form.txtEmail.value
             });
 
             var jwtoken = '';
@@ -538,7 +656,7 @@ class Torcedor
             var form = JSON.stringify({
                 "forgot_token":  form.txtForgotToken.value,
                 "password":  form.txtSenha.value,
-                "password_confirmation":  form.txtConfSenha.value;
+                "password_confirmation":  form.txtConfSenha.value
             });
 
             

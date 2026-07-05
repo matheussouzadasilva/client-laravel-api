@@ -1,0 +1,82 @@
+<!DOCTYPE html> 
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Cat&aacute;logo de Jogos</title>
+        <link rel="stylesheet" type="text/css" href="../../css/layoutadm.min.css" />
+        <link rel="stylesheet" href="../../css/bootstrap.min.css" />
+        
+
+        <script type="text/javascript" src="../../js/scripts.min.js"></script>
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/popper.min.js" ></script>
+        <script src="../../js/bootstrap.min.js" ></script>
+
+          <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                Util.logado();
+                
+                Util.queryString();
+                
+                Torcedor.detalheMeusDados();
+            });
+        </script>
+
+        <noscript>Seu navegador não suporta JavaScript ou mesmo foi desabilitado!</noscript>    
+    </head>
+
+    <body>
+        <header>
+            <div id="headerimg"></div>
+
+            <nav class="navbar navbar-dark bg-dark navbar-expand-lg " id="menuprincipal">
+                <a class="navbar-brand" href="../paginas/home.htm" onmouseover="Util.alterbgmenu()">Home</a>
+                <a class="navbar-brand" href="../paginas/cadastros.htm" onmouseover="Util.alterbgmenu(1)">Cadastros</a>
+                <a class="navbar-brand" href="../paginas/consultas.htm" onmouseover="Util.alterbgmenu(2)">Consultas</a>
+                <a class="navbar-brand" href="../formularios/alterar.senha.htm" onmouseover="Util.alterbgmenu(3)">Alterar senha</a>
+                <a class="navbar-brand" href="../paginas/autenticacao2fatores.htm" onmouseover="Util.alterbgmenu(4)">Autenticação 2 fatores</a>
+                <a class="navbar-brand" href="../formularios/logout.htm" onmouseover="Util.alterbgmenu(5)">Sair</a>
+            </nav>
+        </header>
+
+        <div class="container">
+            <div class="col-sm-6 pull-left"> 
+                </br>
+                <h2 class="titulo">Alterar meus dados</h2>
+
+                <form id="frmMinhaSenha" name="frmMinhaSenha" class="form-horizontal">
+                    <div class="form-group">
+                      <label for="txtSenhaAtual">Senha Atual</label>
+                      <input type="password" class="form-control" name="txtSenhaAtual" id="txtSenhaAtual" />
+                    </div>
+
+                    </br>
+
+                    <div class="form-group">
+                      <label for="txtNome">Nome</label>
+                      <input type="text" class="form-control" name="txtNome" id="txtNome" />
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="txtEmail">E-mail</label>
+                      <input type="text" class="form-control" name="txtEmail" id="txtEmail" />
+                    </div>
+                    
+                    </br>
+                    
+                    <div class="form-group">
+                      <input type="hidden" name="codigo" id="codigo" value="" />
+                      <button id="btnAtualizar" name="btnAtualizar" type="button" class="btn btn-success" onclick="Torcedor.alterarMeusDados(frmMinhaSenha)">Alterar</button>
+                    </div>
+                </form>
+
+                <div id="mensagem"></div>
+            </div>
+        </div>
+
+        <footer></footer>
+    </body>
+</html>
