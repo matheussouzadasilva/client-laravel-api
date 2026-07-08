@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Cat&aacute;logo de Jogos</title>
+        <link rel="stylesheet" type="text/css" href="../../css/layoutadm.min.css" />
+        <link rel="stylesheet" href="../../css/bootstrap.min.css" />
+
+        <script type="text/javascript" src="../../js/scripts.min.js"></script>
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/popper.min.js"></script>
+        <script src="../../js/bootstrap.min.js"></script>
+
+        <noscript>Seu navegador não suporta JavaScript ou mesmo foi desabilitado!</noscript>
+    </head>
+    
+    <body>
+        <header>
+        	<div id="headerimg"></div>
+            <nav class="navbar navbar-dark bg-dark navbar-expand-lg " id="menuprincipal">
+            	<a class="navbar-brand" href="home.htm" onmouseover="Util.alterbgmenu()">Home</a>
+                <a class="navbar-brand" href="../../adm/formularios/cadastro.torcedor.htm" onmouseover="Util.alterbgmenu(1)">Cadastrar-se</a>
+                <a class="navbar-brand" href="../consultas/lista.time.htm" onmouseover="Util.alterbgmenu(2)">Consultas</a>
+                <a class="navbar-brand" href="../../adm/formularios/form.login.htm" onmouseover="Util.alterbgmenu(3)">Entrar</a>
+            </nav>
+        </header>    
+
+        <div id="conteudo">
+            </br>
+            <div id="texto">
+            </div>
+        </div>
+        <footer></footer>
+
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+
+                Util.queryString();
+                
+                confirmarEmail.alteracaoEmail(location.queryString.emailtk);
+
+            });
+        </script>
+    </body>
+</html>

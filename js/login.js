@@ -91,6 +91,8 @@ class Login
                     } else if (xhr.status == 401) {
                         if (json.error !== undefined && json.error === 'invalid_credentials') {
                             document.getElementById("mensagem").innerHTML = "<br /><b>Senha ou usuário inválidos.</b>";
+                        } else if (json.error !== undefined && json.error === 'email_not_confirmed') {
+                            document.getElementById("mensagem").innerHTML = "<br /><b>É necessário confirmar seu e-mail antes de acessar o sistema.</b>";
                         } else {
                             document.getElementById("mensagem").innerHTML = "<br /><b>Algum erro desconhecido ocorreu.</b>";
                         }

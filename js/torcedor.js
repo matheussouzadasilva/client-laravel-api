@@ -455,7 +455,7 @@ class Torcedor
         var xhr = Util.createXHR();
         var mensagem = "";
 
-        alert("ATENÇÃO, ao alterar seu e-mail você tera que confirmar seu novo e-mail clicando no link de alteração de e-mail enviado para seu novo e-mail.");
+        alert("ATENÇÃO, ao alterar seu e-mail você tera que confirmar seu novo e-mail clicando no link de alteração de e-mail enviado para seu novo e-mail. Só depois de confirmado que o novo e-mail aparecera aqui.");
         
         if (form.txtSenhaAtual.value == "") {
             mensagem += "<br /><b>Você não preencheu sua senha atual</b>";

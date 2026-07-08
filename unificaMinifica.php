@@ -16,6 +16,7 @@ class unificaMinifica
 		$minifier->add($basePathJs.'tecnico.js');
 		$minifier->add($basePathJs.'time.js');
 		$minifier->add($basePathJs.'torcedor.js');
+                $minifier->add($basePathJs.'confirmarEmail.js');
 		$result = $minifier->minify($minifiedPathJs);
 		//chmod($minifiedPathJs, 0777);
 

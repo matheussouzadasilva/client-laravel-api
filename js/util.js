@@ -70,7 +70,7 @@ class Util
                 decodeURIComponent(parts[1].replace(/\+/g, " "));
         });
     }
-
+    
     static createXHR()
     {
         var xhr = false;
